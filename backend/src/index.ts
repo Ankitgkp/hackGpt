@@ -1,22 +1,15 @@
 import { OpenRouter } from '@openrouter/sdk';
-import { PROMPT2 } from './prompts2.js';
+import { SYSTEM_PROMPT } from './prompts.js';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { parseAIResponse } from './parser.js';
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-function parseAIResponse(raw: string): string {
-    let parsed = raw;
-    parsed = parsed.replace(/<thinking>[\s\S]*?<\/thinking>/g, '');
-    parsed = parsed.replace(/<stage>[\s\S]*?<\/stage>/g, '');
-    parsed = parsed.replace(/<\/?[a-zA-Z_][a-zA-Z0-9_-]*\s*\/?>/g, '');
-    parsed = parsed.replace(/\n{3,}/g, '\n\n').trim();
-    return parsed;
-}
 
 app.get('/test', (req, res) => {
     res.status(200).json({
@@ -43,7 +36,7 @@ app.post('/send', async (req, res) => {
             chatGenerationParams: {
                 model: "arcee-ai/trinity-large-preview:free",
                 messages: [
-                    { role: 'system', content: PROMPT2 },
+                    { role: 'system', content: SYSTEM_PROMPT },
                     { role: "user", content: prompt },
                 ],
             }
@@ -62,7 +55,7 @@ app.post('/send', async (req, res) => {
         res.end();
     } catch (error) {
         console.error('Error:', error);
-        res.write(`data: ${JSON.stringify({ error: "Failed to get response from AI" })}\n\n`);
+        res.write(`data: ${JSON.stringify({ error: "Failed" })}\n\n`);
         res.end();
     }
 });
