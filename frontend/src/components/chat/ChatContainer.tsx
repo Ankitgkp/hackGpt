@@ -7,6 +7,7 @@ import { ChatInput } from "./ChatInput";
 import { Sidebar } from "./Sidebar";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { useAuth, authHeaders } from "@/context/AuthContext";
+import { useThrottledCallback } from "@/lib/utils";
 
 // todo to remember add this to config
 const BACKEND_URL = "http://localhost:3000";
@@ -236,6 +237,11 @@ export function ChatContainer() {
       abortRef.current = null;
     }
   }, [input, isStreaming, activeSessionId, user]);
+
+  // Throttle to 500 ms — fires immediately on first press, ignores rapid
+  // duplicate clicks/Enter presses until the cooldown window has elapsed.
+  const throttledSendMessage = useThrottledCallback(sendMessage, 500);
+
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
@@ -278,7 +284,7 @@ export function ChatContainer() {
         <ChatInput
           value={input}
           onChange={setInput}
-          onSubmit={sendMessage}
+          onSubmit={throttledSendMessage}
           onStop={stopStreaming}
           isStreaming={isStreaming}
         />
