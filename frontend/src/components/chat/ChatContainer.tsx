@@ -8,6 +8,7 @@ import { Sidebar } from "./Sidebar";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { useAuth, authHeaders } from "@/context/AuthContext";
 
+// todo to remember add this to config
 const BACKEND_URL = "http://localhost:3000";
 
 export function ChatContainer() {
@@ -203,7 +204,9 @@ export function ChatContainer() {
               );
             }
           } catch {
-            // skip malformed chunks
+            console.log(
+              "Parsing error mighe be error in the LLM output format",
+            );
           }
         }
       }
@@ -233,8 +236,6 @@ export function ChatContainer() {
       abortRef.current = null;
     }
   }, [input, isStreaming, activeSessionId, user]);
-
-  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
@@ -250,9 +251,7 @@ export function ChatContainer() {
         onSignInClick={() => setAuthModalOpen(true)}
       />
 
-      {/* Main panel */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Header */}
         <header className="flex h-14 shrink-0 items-center border-b border-border px-6">
           <div className="mx-auto flex w-full max-w-3xl items-center justify-between">
             <span className="font-semibold tracking-tight">HackGPT</span>
@@ -271,15 +270,11 @@ export function ChatContainer() {
             )}
           </div>
         </header>
-
-        {/* Messages */}
         <MessageList
           messages={messages}
           isStreaming={isStreaming}
           streamingMessageId={streamingMessageId}
         />
-
-        {/* Input */}
         <ChatInput
           value={input}
           onChange={setInput}
