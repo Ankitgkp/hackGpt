@@ -1,3 +1,4 @@
+// todo --> put this somewhere else
 const TOKEN_KEY = 'hackgpt_token'
 const USER_KEY = 'hackgpt_user'
 

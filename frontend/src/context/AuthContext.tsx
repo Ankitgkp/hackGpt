@@ -17,6 +17,7 @@ import {
   authHeaders,
 } from "@/lib/auth";
 
+// todos --> add this to config or .env
 const BACKEND_URL = "http://localhost:3000";
 
 interface AuthContextValue {
@@ -34,8 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<StoredUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Restore from localStorage on mount
+  // on mounting
   useEffect(() => {
     const storedToken = getToken();
     const storedUser = getStoredUser();

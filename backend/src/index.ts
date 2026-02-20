@@ -107,6 +107,7 @@ app.post('/send', optionalAuth, async (req: AuthRequest, res) => {
             }).catch(console.error);
         }
         const stream = await openRouter.chat.send({
+            // todo --> Input the LLM model from the user
             chatGenerationParams: {
                 model: 'arcee-ai/trinity-large-preview:free',
                 stream: true,
