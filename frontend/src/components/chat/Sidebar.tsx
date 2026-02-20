@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { Session } from "./types"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { useAuth } from "@/context/AuthContext"
+import { Session } from "./types";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import {
   PenSquare,
   MessageSquare,
@@ -13,17 +13,17 @@ import {
   LogOut,
   LogIn,
   User,
-} from "lucide-react"
+} from "lucide-react";
 
 interface SidebarProps {
-  sessions: Session[]
-  activeSessionId: string | null
-  isOpen: boolean
-  onToggle: () => void
-  onNewChat: () => void
-  onSelectSession: (id: string) => void
-  onDeleteSession: (id: string) => void
-  onSignInClick: () => void
+  sessions: Session[];
+  activeSessionId: string | null;
+  isOpen: boolean;
+  onToggle: () => void;
+  onNewChat: () => void;
+  onSelectSession: (id: string) => void;
+  onDeleteSession: (id: string) => void;
+  onSignInClick: () => void;
 }
 
 export function Sidebar({
@@ -36,9 +36,7 @@ export function Sidebar({
   onDeleteSession,
   onSignInClick,
 }: SidebarProps) {
-  const { user, signOut } = useAuth()
-
-  // ── Collapsed rail ──────────────────────────────────────────────────────────
+  const { user, signOut } = useAuth();
   if (!isOpen) {
     return (
       <div className="flex h-full w-14 flex-col items-center justify-between border-r border-border bg-muted/30 py-3">
@@ -86,13 +84,10 @@ export function Sidebar({
           )}
         </div>
       </div>
-    )
+    );
   }
-
-  // ── Expanded sidebar ────────────────────────────────────────────────────────
   return (
     <aside className="flex h-full w-64 shrink-0 flex-col border-r border-border bg-muted/30">
-      {/* Top bar */}
       <div className="flex h-14 items-center justify-between px-3">
         <span className="text-sm font-semibold tracking-tight">HackGPT</span>
         <div className="flex items-center gap-1">
@@ -116,8 +111,6 @@ export function Sidebar({
           </Button>
         </div>
       </div>
-
-      {/* Session list */}
       <div className="flex-1 overflow-y-auto px-2 py-1">
         {!user ? (
           <div className="flex flex-col items-center gap-3 px-3 py-8 text-center">
@@ -146,7 +139,7 @@ export function Sidebar({
                 "group flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer transition-colors",
                 session.id === activeSessionId
                   ? "bg-accent text-accent-foreground"
-                  : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                  : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
               )}
               onClick={() => onSelectSession(session.id)}
             >
@@ -156,12 +149,12 @@ export function Sidebar({
                 variant="ghost"
                 size="icon"
                 onClick={(e) => {
-                  e.stopPropagation()
-                  onDeleteSession(session.id)
+                  e.stopPropagation();
+                  onDeleteSession(session.id);
                 }}
                 className={cn(
                   "size-6 shrink-0 opacity-0 transition-opacity group-hover:opacity-100",
-                  "hover:bg-destructive/10 hover:text-destructive"
+                  "hover:bg-destructive/10 hover:text-destructive",
                 )}
                 title="Delete chat"
               >
@@ -171,8 +164,6 @@ export function Sidebar({
           ))
         )}
       </div>
-
-      {/* Footer: user info or sign-in CTA */}
       <div className="border-t border-border p-3">
         {user ? (
           <div className="flex items-center justify-between gap-2">
@@ -182,7 +173,9 @@ export function Sidebar({
               </div>
               <div className="min-w-0">
                 <p className="truncate text-xs font-medium">{user.username}</p>
-                <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {user.email}
+                </p>
               </div>
             </div>
             <Button
@@ -206,5 +199,5 @@ export function Sidebar({
         )}
       </div>
     </aside>
-  )
+  );
 }

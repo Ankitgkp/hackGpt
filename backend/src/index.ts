@@ -13,7 +13,11 @@ app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
 app.use(express.json());
 
 app.use('/auth', authRouter);
-app.get('/test', (_req, res) => { res.json({ message: 'Working' }); });
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        message: "Backend up"
+    })
+})
 app.get('/sessions', requireAuth, async (req: AuthRequest, res) => {
     try {
         const sessions = await prisma.session.findMany({
