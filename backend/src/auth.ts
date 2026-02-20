@@ -2,14 +2,11 @@ import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import prisma from './db.js';
 import { signToken } from './middleware.js';
-
 const router = Router();
 
 function isValidEmail(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
-
-// ── POST /auth/signup ─────────────────────────────────────────────────────────
 router.post('/signup', async (req: Request, res: Response): Promise<void> => {
     const { username, email, password } = req.body;
 
@@ -55,8 +52,6 @@ router.post('/signup', async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ message: 'Failed to create account' });
     }
 });
-
-// ── POST /auth/signin ─────────────────────────────────────────────────────────
 router.post('/signin', async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
 

@@ -2,25 +2,18 @@ import { OpenRouter } from '@openrouter/sdk';
 import { SYSTEM_PROMPT } from './prompts.js';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import { parseAIResponse } from './parser.js';
 import prisma from './db.js';
 import { requireAuth, optionalAuth, AuthRequest } from './middleware.js';
 import authRouter from './auth.js';
-dotenv.config();
+
+const openRouter = new OpenRouter({ apiKey: process.env.OPENROUTER_API_KEY || '' });
 
 const app = express();
 app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
 app.use(express.json());
 
-// ── Auth routes ───────────────────────────────────────────────────────────────
 app.use('/auth', authRouter);
-
-// ── Health ────────────────────────────────────────────────────────────────────
 app.get('/test', (_req, res) => { res.json({ message: 'Working' }); });
-
-// ── Sessions (require auth) ───────────────────────────────────────────────────
-
 app.get('/sessions', requireAuth, async (req: AuthRequest, res) => {
     try {
         const sessions = await prisma.session.findMany({
@@ -79,9 +72,6 @@ app.get('/sessions/:id/messages', requireAuth, async (req: AuthRequest, res) => 
         res.status(500).json({ message: 'Failed to fetch messages' });
     }
 });
-
-// ── Chat – works for guests (no persist) and logged-in users (persists) ───────
-
 app.post('/send', optionalAuth, async (req: AuthRequest, res) => {
     const { prompt, sessionId } = req.body;
     if (!prompt || typeof prompt !== 'string') {
@@ -94,46 +84,59 @@ app.post('/send', optionalAuth, async (req: AuthRequest, res) => {
     res.setHeader('Connection', 'keep-alive');
 
     try {
-        // Only persist when the user is authenticated and a sessionId is given
-        if (req.userId && sessionId) {
-            await prisma.message.create({ data: { role: 'user', content: prompt, sessionId } });
-            const msgCount = await prisma.message.count({ where: { sessionId } });
-            const updateData = msgCount === 1
-                ? { title: prompt.slice(0, 60).trim(), updatedAt: new Date() }
-                : { updatedAt: new Date() };
-            await prisma.session.update({ where: { id: sessionId }, data: updateData });
+        const isAuthed = !!(req.userId && sessionId);
+        let history: { role: string; content: string }[] = [];
+        if (isAuthed) {
+            history = await prisma.message.findMany({
+                where: { sessionId },
+                orderBy: { createdAt: 'asc' },
+                select: { role: true, content: true },
+            });
+            const isFirstMessage = history.length === 0;
+            prisma.message.create({ data: { role: 'user', content: prompt, sessionId } })
+                .catch(console.error);
+            prisma.session.update({
+                where: { id: sessionId },
+                data: isFirstMessage
+                    ? { title: prompt.slice(0, 60).trim(), updatedAt: new Date() }
+                    : { updatedAt: new Date() },
+            }).catch(console.error);
         }
-
-        const client = new OpenRouter({ apiKey: process.env.OPENROUTER_API_KEY || '' });
-        const response = await client.chat.send({
+        const stream = await openRouter.chat.send({
             chatGenerationParams: {
                 model: 'arcee-ai/trinity-large-preview:free',
+                stream: true,
                 messages: [
                     { role: 'system', content: SYSTEM_PROMPT },
+                    ...history.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
                     { role: 'user', content: prompt },
                 ],
             },
         });
 
-        const rawContent = String(response.choices[0].message.content || '');
-        const parsed = parseAIResponse(rawContent);
-
-        if (req.userId && sessionId) {
-            await prisma.message.create({ data: { role: 'assistant', content: rawContent, sessionId } });
+        let fullContent = '';
+        for await (const chunk of stream) {
+            const token = chunk.choices[0]?.delta?.content;
+            if (token) {
+                fullContent += token;
+                res.write(`data: ${JSON.stringify({ content: token })}\n\n`);
+            }
         }
 
-        const chunkSize = 3;
-        for (let i = 0; i < parsed.length; i += chunkSize) {
-            const chunk = parsed.slice(i, i + chunkSize);
-            res.write(`data: ${JSON.stringify({ content: chunk })}\n\n`);
-            await new Promise(resolve => setTimeout(resolve, 15));
-        }
         res.write('data: [DONE]\n\n');
         res.end();
+        if (isAuthed && fullContent) {
+            prisma.message.create({ data: { role: 'assistant', content: fullContent, sessionId } })
+                .catch(console.error);
+        }
     } catch (error) {
         console.error('Error:', error);
-        res.write(`data: ${JSON.stringify({ error: 'Failed' })}\n\n`);
-        res.end();
+        if (!res.headersSent) {
+            res.status(500).json({ message: 'Internal server error' });
+        } else {
+            res.write(`data: ${JSON.stringify({ error: 'Failed' })}\n\n`);
+            res.end();
+        }
     }
 });
 

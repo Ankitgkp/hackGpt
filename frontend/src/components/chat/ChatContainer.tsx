@@ -12,13 +12,10 @@ const BACKEND_URL = "http://localhost:3000";
 
 export function ChatContainer() {
   const { user, isLoading } = useAuth();
-
-  // Sidebar / session state
   const [sessions, setSessions] = useState<Session[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Chat state
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
@@ -26,21 +23,16 @@ export function ChatContainer() {
     null,
   );
   const abortRef = useRef<AbortController | null>(null);
-
-  // Auth modal
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
-  // ── Load / clear sessions when auth state changes ──────────────────────────
   useEffect(() => {
     if (isLoading) return;
     if (!user) {
-      // Guest: clear everything
       setSessions([]);
       setActiveSessionId(null);
       setMessages([]);
       return;
     }
-    // Logged in: fetch saved sessions
     fetch(`${BACKEND_URL}/sessions`, { headers: authHeaders() })
       .then((r) => r.json())
       .then((data: Session[]) =>
@@ -54,8 +46,6 @@ export function ChatContainer() {
       )
       .catch(console.error);
   }, [user, isLoading]);
-
-  // ── Load messages when switching sessions ─────────────────────────────────
   useEffect(() => {
     if (!activeSessionId || !user) return;
     fetch(`${BACKEND_URL}/sessions/${activeSessionId}/messages`, {
@@ -70,14 +60,12 @@ export function ChatContainer() {
       .catch(console.error);
   }, [activeSessionId, user]);
 
-  // ── Handlers ──────────────────────────────────────────────────────────────
   const handleSelectSession = useCallback((id: string) => {
     setActiveSessionId(id);
   }, []);
 
   const handleNewChat = useCallback(async () => {
     if (!user) {
-      // Guest: just clear the current in-memory chat
       setActiveSessionId(null);
       setMessages([]);
       return;
@@ -129,8 +117,6 @@ export function ChatContainer() {
   const sendMessage = useCallback(async () => {
     const prompt = input.trim();
     if (!prompt || isStreaming) return;
-
-    // For logged-in users, auto-create a session if none is active
     let sessionId = activeSessionId;
     if (user && !sessionId) {
       try {
@@ -154,8 +140,6 @@ export function ChatContainer() {
         return;
       }
     }
-    // Guests: sessionId stays null — messages are ephemeral (no DB write)
-
     const userMessage: Message = {
       id: crypto.randomUUID(),
       role: "user",
@@ -224,7 +208,6 @@ export function ChatContainer() {
         }
       }
 
-      // Optimistically update sidebar title after first message
       if (user && sessionId) {
         setSessions((prev) =>
           prev.map((s) =>
