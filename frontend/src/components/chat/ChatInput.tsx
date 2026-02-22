@@ -35,7 +35,7 @@ export function ChatInput({ value, onChange, onSubmit, onStop, isStreaming, disa
   return (
     <div className="border-t border-border bg-background px-4 pb-6 pt-4">
       <div className="mx-auto max-w-3xl">
-        <div className="relative flex items-end gap-2 rounded-2xl border border-border bg-muted/40 px-4 py-3 focus-within:border-ring focus-within:ring-1 focus-within:ring-ring transition-all">
+        <div className="relative flex items-end gap-2 rounded-2xl border border-border px-4 py-3 focus-within:border-ring focus-within:ring-1 focus-within:ring-ring transition-all">
           <Textarea
             ref={textareaRef}
             value={value}
