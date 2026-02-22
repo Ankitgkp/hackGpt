@@ -72,7 +72,6 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
           </DialogDescription>
         </DialogHeader>
 
-        {/* Tabs */}
         <div className="flex rounded-lg border border-border p-1">
           {(["signin", "signup"] as Tab[]).map((t) => (
             <button
