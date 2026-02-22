@@ -1,19 +1,74 @@
 "use client";
 
+import { ReactNode } from "react";
 import { Message } from "./types";
 import { cn } from "@/lib/utils";
-import { Bot, User } from "lucide-react";
+import { CodeBlock } from "./CodeBlock";
 
-function renderMarkdown(text: string) {
-  return text.split("\n").map((line, i) => {
-    const parts = line.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g).map((part, j) => {
-      if (/^\*\*[^*]+\*\*$/.test(part)) return <strong key={j}>{part.slice(2, -2)}</strong>;
-      if (/^\*[^*]+\*$/.test(part)) return <em key={j}>{part.slice(1, -1)}</em>;
-      if (/^`[^`]+`$/.test(part)) return <code key={j} className="bg-black/10 dark:bg-white/10 rounded px-1 font-mono text-xs">{part.slice(1, -1)}</code>;
-      return part;
-    });
-    return <span key={i}>{parts}{i < text.split("\n").length - 1 && <br />}</span>;
+function renderInlineMarkdown(text: string): ReactNode[] {
+  return text.split("\n").map((line, i, arr) => {
+    const parts = line
+      .split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g)
+      .map((part, j) => {
+        if (/^\*\*[^*]+\*\*$/.test(part))
+          return <strong key={j}>{part.slice(2, -2)}</strong>;
+        if (/^\*[^*]+\*$/.test(part))
+          return <em key={j}>{part.slice(1, -1)}</em>;
+        if (/^`[^`]+`$/.test(part))
+          return (
+            <code
+              key={j}
+              className="bg-black/10 dark:bg-white/10 rounded px-1 font-mono text-xs"
+            >
+              {part.slice(1, -1)}
+            </code>
+          );
+        return part;
+      });
+    return (
+      <span key={i}>
+        {parts}
+        {i < arr.length - 1 && <br />}
+      </span>
+    );
   });
+}
+
+function renderMarkdown(content: string): ReactNode[] {
+  const codeBlockRegex = /```(\w*)\n([\s\S]*?)```/g;
+  const elements: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = codeBlockRegex.exec(content)) !== null) {
+    const textBefore = content.slice(lastIndex, match.index);
+    if (textBefore) {
+      elements.push(
+        <span key={`text-${lastIndex}`} className="whitespace-pre-wrap break-words">
+          {renderInlineMarkdown(textBefore)}
+        </span>
+      );
+    }
+
+    const language = match[1] || "text";
+    const code = match[2].replace(/\n$/, "");
+    elements.push(
+      <CodeBlock key={`code-${match.index}`} code={code} language={language} />
+    );
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  const remaining = content.slice(lastIndex);
+  if (remaining) {
+    elements.push(
+      <span key={`text-${lastIndex}`} className="whitespace-pre-wrap break-words">
+        {renderInlineMarkdown(remaining)}
+      </span>
+    );
+  }
+
+  return elements;
 }
 
 interface MessageBubbleProps {
@@ -34,7 +89,7 @@ export function MessageBubble({ message, isStreaming }: MessageBubbleProps) {
             : "",
         )}
       >
-        <p className="whitespace-pre-wrap wrap-break-word">{renderMarkdown(message.content)}</p>
+        <div className="wrap-break-word">{renderMarkdown(message.content)}</div>
         {isStreaming && (
           <span className="ml-1 inline-block h-4 w-0.5 animate-pulse bg-current align-middle" />
         )}

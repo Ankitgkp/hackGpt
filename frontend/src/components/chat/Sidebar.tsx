@@ -45,7 +45,6 @@ export function Sidebar({
         isOpen ? "w-64" : "w-14"
       )}
     >
-      {/* Collapsed view */}
       <div
         className={cn(
           "absolute inset-0 flex flex-col items-center justify-between py-3 transition-opacity duration-300",
@@ -97,7 +96,6 @@ export function Sidebar({
         </div>
       </div>
 
-      {/* Expanded view */}
       <div
         className={cn(
           "flex h-full w-64 flex-col transition-opacity duration-300",
