@@ -87,7 +87,7 @@ export function Sidebar({
     );
   }
   return (
-    <aside className="flex h-full w-64 shrink-0 flex-col border-r border-border bg-muted/30 dark:bg-muted/10">
+    <aside className="relative flex h-full w-64 shrink-0 flex-col border-r border-border bg-muted/30 dark:bg-sidebar backdrop-blur-xl">
       <div className="flex h-14 items-center justify-between px-4 pt-2">
         <span className="text-sm font-semibold tracking-tight text-muted-foreground">HackGPT</span>
         <Button

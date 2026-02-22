@@ -241,7 +241,7 @@ export function ChatContainer() {
   const throttledSendMessage = useThrottledCallback(sendMessage, 500);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-screen overflow-hidden">
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
 
       <Sidebar
