@@ -88,28 +88,26 @@ export function Sidebar({
   }
   return (
     <aside className="flex h-full w-64 shrink-0 flex-col border-r border-border bg-muted/30 dark:bg-muted/10">
-      <div className="flex h-14 items-center justify-between px-3">
-        <span className="text-sm font-semibold tracking-tight">HackGPT</span>
-        <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onNewChat}
-            className="size-8"
-            title="New chat"
-          >
-            <PenSquare size={16} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onToggle}
-            className="size-8"
-            title="Close sidebar"
-          >
-            <PanelLeftClose size={16} />
-          </Button>
-        </div>
+      <div className="flex h-14 items-center justify-between px-4 pt-2">
+        <span className="text-sm font-semibold tracking-tight text-muted-foreground">HackGPT</span>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggle}
+          className="size-8 text-muted-foreground hover:text-foreground"
+          title="Close sidebar"
+        >
+          <PanelLeftClose size={16} />
+        </Button>
+      </div>
+
+      <div className="px-3 pb-3">
+        <button
+          onClick={onNewChat}
+          className="w-full rounded-xl bg-primary/15 hover:bg-primary/25 border border-primary/20 text-primary transition-all py-3 font-semibold text-sm flex items-center justify-center"
+        >
+          New Chat
+        </button>
       </div>
       <div className="flex-1 overflow-y-auto px-2 py-1">
         {!user ? (
