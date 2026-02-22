@@ -18,7 +18,6 @@ interface ChatInputProps {
 export function ChatInput({ value, onChange, onSubmit, onStop, isStreaming, disabled }: ChatInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  // Auto-resize textarea
   useEffect(() => {
     const el = textareaRef.current
     if (!el) return

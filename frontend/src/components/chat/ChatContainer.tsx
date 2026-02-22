@@ -9,7 +9,6 @@ import { AuthModal } from "@/components/auth/AuthModal";
 import { useAuth, authHeaders } from "@/context/AuthContext";
 import { useThrottledCallback } from "@/lib/utils";
 
-// todo to remember add this to config
 const BACKEND_URL = "http://localhost:3000";
 
 export function ChatContainer() {
@@ -238,8 +237,6 @@ export function ChatContainer() {
     }
   }, [input, isStreaming, activeSessionId, user]);
 
-  // Throttle to 500 ms — fires immediately on first press, ignores rapid
-  // duplicate clicks/Enter presses until the cooldown window has elapsed.
   const throttledSendMessage = useThrottledCallback(sendMessage, 500);
 
   return (
