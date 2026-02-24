@@ -112,7 +112,7 @@ app.post('/send', optionalAuth, async (req: AuthRequest, res) => {
                 model: 'arcee-ai/trinity-large-preview:free',
                 stream: true,
                 messages: [
-                    { role: 'system', content: SYSTEM_PROMPT },
+                    // { role: 'system', content: SYSTEM_PROMPT },
                     ...history.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
                     { role: 'user', content: prompt },
                 ],

@@ -258,7 +258,7 @@ export function ChatContainer() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <header className="flex h-14 shrink-0 items-center px-6">
           <div className="mx-auto flex w-full max-w-3xl items-center justify-between">
-            <span className="font-semibold tracking-tight">HackGPT</span>
+            <span className="font-semibold tracking-tight"></span>
             <div className="flex items-center gap-3">
               <ThemeToggle />
               {!user && (

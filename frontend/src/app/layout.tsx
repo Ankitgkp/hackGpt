@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HackGPT",
+  title: "gg",
   description: "AI Chat Assistant",
 };
 
