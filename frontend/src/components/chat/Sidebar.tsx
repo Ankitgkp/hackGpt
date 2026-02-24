@@ -42,14 +42,13 @@ export function Sidebar({
     <aside
       className={cn(
         "relative flex h-full shrink-0 flex-col border-r border-border bg-muted/30 dark:bg-sidebar backdrop-blur-xl overflow-hidden transition-all duration-300 ease-in-out",
-        isOpen ? "w-64" : "w-14"
+        isOpen ? "w-64" : "w-14",
       )}
     >
-      {/* Collapsed view */}
       <div
         className={cn(
           "absolute inset-0 flex flex-col items-center justify-between py-3 transition-opacity duration-300",
-          isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+          isOpen ? "opacity-0 pointer-events-none" : "opacity-100",
         )}
       >
         <div className="flex flex-col items-center gap-2">
@@ -97,15 +96,16 @@ export function Sidebar({
         </div>
       </div>
 
-      {/* Expanded view */}
       <div
         className={cn(
           "flex h-full w-64 flex-col transition-opacity duration-300",
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none",
         )}
       >
         <div className="flex h-14 items-center justify-between px-4 pt-2">
-          <span className="text-sm font-semibold tracking-tight text-muted-foreground whitespace-nowrap">HackGPT</span>
+          <span className="text-sm font-semibold tracking-tight text-muted-foreground whitespace-nowrap">
+            gg
+          </span>
           <Button
             variant="ghost"
             size="icon"
@@ -186,7 +186,9 @@ export function Sidebar({
                   {user.username[0].toUpperCase()}
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-xs font-medium">{user.username}</p>
+                  <p className="truncate text-xs font-medium">
+                    {user.username}
+                  </p>
                   <p className="truncate text-xs text-muted-foreground">
                     {user.email}
                   </p>

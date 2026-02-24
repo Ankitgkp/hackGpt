@@ -9,7 +9,7 @@ import authRouter from './auth.js';
 const openRouter = new OpenRouter({ apiKey: process.env.OPENROUTER_API_KEY || '' });
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
+app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3001', credentials: true }));
 app.use(express.json());
 
 app.use('/auth', authRouter);
@@ -112,7 +112,7 @@ app.post('/send', optionalAuth, async (req: AuthRequest, res) => {
                 model: 'arcee-ai/trinity-large-preview:free',
                 stream: true,
                 messages: [
-                    { role: 'system', content: SYSTEM_PROMPT },
+                    // { role: 'system', content: SYSTEM_PROMPT },
                     ...history.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
                     { role: 'user', content: prompt },
                 ],
@@ -145,5 +145,6 @@ app.post('/send', optionalAuth, async (req: AuthRequest, res) => {
     }
 });
 
-app.listen(3000, () => console.log('Listening on port 3000'));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
