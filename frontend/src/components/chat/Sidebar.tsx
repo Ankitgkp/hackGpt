@@ -85,7 +85,6 @@ export function Sidebar({
         isOpen ? "w-64" : "w-14",
       )}
     >
-      {/* Collapsed state */}
       <div
         className={cn(
           "absolute inset-0 flex flex-col items-center justify-between py-3 transition-opacity duration-300",
@@ -137,14 +136,12 @@ export function Sidebar({
         </div>
       </div>
 
-      {/* Expanded state */}
       <div
         className={cn(
           "flex h-full w-64 flex-col transition-opacity duration-300",
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none",
         )}
       >
-        {/* Header with logo and toggle */}
         <div className="flex h-14 items-center justify-between px-4 pt-2">
           <div className="flex items-center gap-2">
             <PanelLeftClose
@@ -158,7 +155,6 @@ export function Sidebar({
           </div>
         </div>
 
-        {/* New Chat button */}
         <div className="px-3 pb-2">
           <button
             onClick={onNewChat}
@@ -168,7 +164,6 @@ export function Sidebar({
           </button>
         </div>
 
-        {/* Search input */}
         <div className="px-3 pb-2">
           <div className="relative">
             <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
@@ -182,7 +177,6 @@ export function Sidebar({
           </div>
         </div>
 
-        {/* Session list grouped by date */}
         <div className="flex-1 overflow-y-auto px-2 py-1">
           {!user ? (
             <div className="flex flex-col items-center gap-3 px-3 py-8 text-center">
@@ -234,7 +228,6 @@ export function Sidebar({
           )}
         </div>
 
-        {/* Bottom: login or user info */}
         <div className="border-t border-border/50 p-3">
           {user ? (
             <div className="flex items-center justify-between gap-2">

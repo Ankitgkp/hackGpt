@@ -41,7 +41,7 @@ export function ChatInput({ value, onChange, onSubmit, onStop, isStreaming, disa
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Message AI..."
+            placeholder="Type your message here..."
             rows={1}
             disabled={disabled}
             className={cn(
@@ -59,9 +59,7 @@ export function ChatInput({ value, onChange, onSubmit, onStop, isStreaming, disa
             {isStreaming ? <Square size={14} fill="currentColor" /> : <ArrowUp size={16} />}
           </Button>
         </div>
-        <p className="mt-2 text-center text-xs text-muted-foreground/50">
-          Press Enter to send · Shift+Enter for new line
-        </p>
+
       </div>
     </div>
   )
