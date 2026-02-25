@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import {
   PenSquare,
-  MessageSquare,
   Trash2,
   PanelLeftClose,
   PanelLeft,
@@ -50,8 +49,10 @@ function groupSessionsByDate(sessions: Session[]) {
   }
 
   if (todayGroup.length) groups.push({ label: "Today", sessions: todayGroup });
-  if (yesterdayGroup.length) groups.push({ label: "Yesterday", sessions: yesterdayGroup });
-  if (last7Group.length) groups.push({ label: "Previous 7 days", sessions: last7Group });
+  if (yesterdayGroup.length)
+    groups.push({ label: "Yesterday", sessions: yesterdayGroup });
+  if (last7Group.length)
+    groups.push({ label: "Previous 7 days", sessions: last7Group });
   if (olderGroup.length) groups.push({ label: "Older", sessions: olderGroup });
 
   return groups;
@@ -72,7 +73,7 @@ export function Sidebar({
 
   const filteredSessions = searchQuery.trim()
     ? sessions.filter((s) =>
-        s.title.toLowerCase().includes(searchQuery.toLowerCase())
+        s.title.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : sessions;
 
@@ -166,7 +167,10 @@ export function Sidebar({
 
         <div className="px-3 pb-2">
           <div className="relative">
-            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
+            <Search
+              size={14}
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/60"
+            />
             <input
               type="text"
               value={searchQuery}
@@ -186,7 +190,9 @@ export function Sidebar({
             </div>
           ) : filteredSessions.length === 0 ? (
             <p className="px-3 py-8 text-center text-xs text-muted-foreground whitespace-nowrap">
-              {searchQuery ? "No matching chats." : "No chats yet. Start a new one!"}
+              {searchQuery
+                ? "No matching chats."
+                : "No chats yet. Start a new one!"}
             </p>
           ) : (
             groupedSessions.map((group) => (
