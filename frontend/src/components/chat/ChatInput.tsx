@@ -54,7 +54,7 @@ export function ChatInput({ value, onChange, onSubmit, onStop, isStreaming, disa
             size="icon"
             onClick={isStreaming ? onStop : onSubmit}
             disabled={!isStreaming && (!value.trim() || disabled)}
-            className="mb-0.5 size-8 shrink-0 rounded-lg"
+            className="mb-0.5 size-8 shrink-0 rounded-full"
           >
             {isStreaming ? <Square size={14} fill="currentColor" /> : <ArrowUp size={16} />}
           </Button>
