@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import {
   PenSquare,
-  MessageSquare,
   Trash2,
   PanelLeftClose,
   PanelLeft,

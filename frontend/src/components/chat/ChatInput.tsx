@@ -59,7 +59,6 @@ export function ChatInput({ value, onChange, onSubmit, onStop, isStreaming, disa
             {isStreaming ? <Square size={14} fill="currentColor" /> : <ArrowUp size={16} />}
           </Button>
         </div>
-
       </div>
     </div>
   )
