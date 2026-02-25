@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Session } from "./types";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,7 @@ import {
   PanelLeft,
   LogOut,
   LogIn,
-  User,
+  Search,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -26,6 +27,36 @@ interface SidebarProps {
   onSignInClick: () => void;
 }
 
+function groupSessionsByDate(sessions: Session[]) {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const sevenDaysAgo = new Date(today);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  const groups: { label: string; sessions: Session[] }[] = [];
+  const todayGroup: Session[] = [];
+  const yesterdayGroup: Session[] = [];
+  const last7Group: Session[] = [];
+  const olderGroup: Session[] = [];
+
+  for (const s of sessions) {
+    const d = new Date(s.updatedAt);
+    if (d >= today) todayGroup.push(s);
+    else if (d >= yesterday) yesterdayGroup.push(s);
+    else if (d >= sevenDaysAgo) last7Group.push(s);
+    else olderGroup.push(s);
+  }
+
+  if (todayGroup.length) groups.push({ label: "Today", sessions: todayGroup });
+  if (yesterdayGroup.length) groups.push({ label: "Yesterday", sessions: yesterdayGroup });
+  if (last7Group.length) groups.push({ label: "Previous 7 days", sessions: last7Group });
+  if (olderGroup.length) groups.push({ label: "Older", sessions: olderGroup });
+
+  return groups;
+}
+
 export function Sidebar({
   sessions,
   activeSessionId,
@@ -37,6 +68,15 @@ export function Sidebar({
   onSignInClick,
 }: SidebarProps) {
   const { user, signOut } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredSessions = searchQuery.trim()
+    ? sessions.filter((s) =>
+        s.title.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : sessions;
+
+  const groupedSessions = groupSessionsByDate(filteredSessions);
 
   return (
     <aside
@@ -45,6 +85,7 @@ export function Sidebar({
         isOpen ? "w-64" : "w-14",
       )}
     >
+      {/* Collapsed state */}
       <div
         className={cn(
           "absolute inset-0 flex flex-col items-center justify-between py-3 transition-opacity duration-300",
@@ -96,89 +137,105 @@ export function Sidebar({
         </div>
       </div>
 
+      {/* Expanded state */}
       <div
         className={cn(
           "flex h-full w-64 flex-col transition-opacity duration-300",
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none",
         )}
       >
+        {/* Header with logo and toggle */}
         <div className="flex h-14 items-center justify-between px-4 pt-2">
-          <span className="text-sm font-semibold tracking-tight text-muted-foreground whitespace-nowrap">
-            gg
-          </span>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onToggle}
-            className="size-8 text-muted-foreground hover:text-foreground"
-            title="Close sidebar"
-          >
-            <PanelLeftClose size={16} />
-          </Button>
+          <div className="flex items-center gap-2">
+            <PanelLeftClose
+              size={16}
+              className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors"
+              onClick={onToggle}
+            />
+            <span className="text-sm font-bold tracking-tight whitespace-nowrap">
+              HackGPT
+            </span>
+          </div>
         </div>
 
-        <div className="px-3 pb-3">
+        {/* New Chat button */}
+        <div className="px-3 pb-2">
           <button
             onClick={onNewChat}
-            className="w-full rounded-xl bg-primary/15 hover:bg-primary/25 border border-primary/20 text-primary transition-all py-3 font-semibold text-sm flex items-center justify-center whitespace-nowrap"
+            className="w-full rounded-xl bg-primary/15 hover:bg-primary/25 border border-primary/20 text-primary transition-all py-2.5 font-semibold text-sm flex items-center justify-center whitespace-nowrap"
           >
             New Chat
           </button>
         </div>
+
+        {/* Search input */}
+        <div className="px-3 pb-2">
+          <div className="relative">
+            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search your threads..."
+              className="w-full rounded-lg bg-accent/50 border border-border/50 py-1.5 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-ring transition-all"
+            />
+          </div>
+        </div>
+
+        {/* Session list grouped by date */}
         <div className="flex-1 overflow-y-auto px-2 py-1">
           {!user ? (
             <div className="flex flex-col items-center gap-3 px-3 py-8 text-center">
               <p className="text-xs text-muted-foreground whitespace-nowrap">
-                Sign in to save your chats across sessions.
+                Sign in to save your chats.
               </p>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={onSignInClick}
-                className="w-full gap-2"
-              >
-                <LogIn size={14} />
-                Sign in
-              </Button>
             </div>
-          ) : sessions.length === 0 ? (
+          ) : filteredSessions.length === 0 ? (
             <p className="px-3 py-8 text-center text-xs text-muted-foreground whitespace-nowrap">
-              No chats yet. Start a new one!
+              {searchQuery ? "No matching chats." : "No chats yet. Start a new one!"}
             </p>
           ) : (
-            sessions.map((session) => (
-              <div
-                key={session.id}
-                className={cn(
-                  "group flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer transition-colors",
-                  session.id === activeSessionId
-                    ? "bg-accent text-accent-foreground"
-                    : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
-                )}
-                onClick={() => onSelectSession(session.id)}
-              >
-                <MessageSquare size={14} className="shrink-0 opacity-60" />
-                <span className="flex-1 truncate">{session.title}</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDeleteSession(session.id);
-                  }}
-                  className={cn(
-                    "size-6 shrink-0 opacity-0 transition-opacity group-hover:opacity-100",
-                    "hover:bg-destructive/10 hover:text-destructive",
-                  )}
-                  title="Delete chat"
-                >
-                  <Trash2 size={12} />
-                </Button>
+            groupedSessions.map((group) => (
+              <div key={group.label} className="mb-2">
+                <p className="px-3 pt-2 pb-1 text-xs font-medium text-primary/80">
+                  {group.label}
+                </p>
+                {group.sessions.map((session) => (
+                  <div
+                    key={session.id}
+                    className={cn(
+                      "group flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer transition-colors",
+                      session.id === activeSessionId
+                        ? "bg-accent text-accent-foreground"
+                        : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+                    )}
+                    onClick={() => onSelectSession(session.id)}
+                  >
+                    <span className="flex-1 truncate">{session.title}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteSession(session.id);
+                      }}
+                      className={cn(
+                        "size-6 shrink-0 opacity-0 transition-opacity group-hover:opacity-100",
+                        "hover:bg-destructive/10 hover:text-destructive",
+                      )}
+                      title="Delete chat"
+                    >
+                      <Trash2 size={12} />
+                    </Button>
+                  </div>
+                ))}
               </div>
             ))
           )}
         </div>
-        <div className="p-3">
+
+        {/* Bottom: login or user info */}
+        <div className="border-t border-border/50 p-3">
           {user ? (
             <div className="flex items-center justify-between gap-2">
               <div className="flex min-w-0 items-center gap-2">
@@ -188,9 +245,6 @@ export function Sidebar({
                 <div className="min-w-0">
                   <p className="truncate text-xs font-medium">
                     {user.username}
-                  </p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {user.email}
                   </p>
                 </div>
               </div>
@@ -207,10 +261,10 @@ export function Sidebar({
           ) : (
             <button
               onClick={onSignInClick}
-              className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground whitespace-nowrap"
+              className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground whitespace-nowrap"
             >
-              <User size={14} />
-              <span>Sign in to save chats</span>
+              <LogIn size={16} />
+              <span>Login</span>
             </button>
           )}
         </div>
