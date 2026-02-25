@@ -37,8 +37,8 @@ export function MessageList({
   if (messages.length === 0) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center text-center px-6">
-        <h2 className="text-3xl font-bold tracking-tight">
-          How can I help you?
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Hello! How can I help you today?
         </h2>
       </div>
     );

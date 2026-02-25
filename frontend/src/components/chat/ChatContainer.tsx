@@ -6,7 +6,6 @@ import { MessageList } from "./MessageList";
 import { ChatInput } from "./ChatInput";
 import { Sidebar } from "./Sidebar";
 import { AuthModal } from "@/components/auth/AuthModal";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuth, authHeaders } from "@/context/AuthContext";
 import { useThrottledCallback } from "@/lib/utils";
 
@@ -256,27 +255,6 @@ export function ChatContainer() {
       />
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex h-14 shrink-0 items-center px-6">
-          <div className="mx-auto flex w-full max-w-3xl items-center justify-between">
-            <span className="font-semibold tracking-tight"></span>
-            <div className="flex items-center gap-3">
-              <ThemeToggle />
-              {!user && (
-                <button
-                  onClick={() => setAuthModalOpen(true)}
-                  className="rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground hover:bg-muted/80 transition-colors"
-                >
-                  Sign in to save chats
-                </button>
-              )}
-              {user && (
-                <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground">
-                  {user.username}
-                </span>
-              )}
-            </div>
-          </div>
-        </header>
         <MessageList
           messages={messages}
           isStreaming={isStreaming}
