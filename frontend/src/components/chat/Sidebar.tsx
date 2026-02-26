@@ -5,6 +5,7 @@ import { Session } from "./types";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import { ThemeToggle } from "@/components/theme-toggle";
 import {
   PenSquare,
   Trash2,
@@ -14,7 +15,6 @@ import {
   LogIn,
   Search,
 } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 interface SidebarProps {
   sessions: Session[];
