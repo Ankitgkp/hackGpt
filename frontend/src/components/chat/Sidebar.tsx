@@ -14,6 +14,7 @@ import {
   LogIn,
   Search,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface SidebarProps {
   sessions: Session[];
@@ -112,7 +113,8 @@ export function Sidebar({
             <PenSquare size={18} />
           </Button>
         </div>
-        <div className="pb-1">
+        <div className="flex flex-col items-center gap-2 pb-1">
+          <ThemeToggle />
           {user ? (
             <Button
               variant="ghost"
@@ -247,24 +249,30 @@ export function Sidebar({
                   </p>
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={signOut}
-                className="size-7 shrink-0"
-                title="Sign out"
-              >
-                <LogOut size={14} />
-              </Button>
+              <div className="flex items-center gap-1 shrink-0">
+                <ThemeToggle />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={signOut}
+                  className="size-7 shrink-0"
+                  title="Sign out"
+                >
+                  <LogOut size={14} />
+                </Button>
+              </div>
             </div>
           ) : (
-            <button
-              onClick={onSignInClick}
-              className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground whitespace-nowrap"
-            >
-              <LogIn size={16} />
-              <span>Login</span>
-            </button>
+            <div className="flex items-center justify-between gap-2">
+              <button
+                onClick={onSignInClick}
+                className="flex flex-1 items-center gap-2 rounded-lg px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground whitespace-nowrap"
+              >
+                <LogIn size={16} />
+                <span>Login</span>
+              </button>
+              <ThemeToggle />
+            </div>
           )}
         </div>
       </div>
