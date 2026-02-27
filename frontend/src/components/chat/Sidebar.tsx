@@ -74,8 +74,8 @@ export function Sidebar({
 
   const filteredSessions = searchQuery.trim()
     ? sessions.filter((s) =>
-        s.title.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
+      s.title.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
     : sessions;
 
   const groupedSessions = groupSessionsByDate(filteredSessions);
@@ -153,7 +153,7 @@ export function Sidebar({
               onClick={onToggle}
             />
             <span className="text-sm font-bold tracking-tight whitespace-nowrap">
-              HackGPT
+              gg
             </span>
           </div>
         </div>
