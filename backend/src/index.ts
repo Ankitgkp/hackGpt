@@ -9,7 +9,20 @@ import authRouter from './auth.js';
 const openRouter = new OpenRouter({ apiKey: process.env.OPENROUTER_API_KEY || '' });
 
 const app = express();
-app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3001', credentials: true }));
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000,http://localhost:3001')
+    .split(',')
+    .map((o) => o.trim());
+app.use(cors({
+    origin: (origin, callback) => {
+        // allow requests with no origin (curl, mobile apps, etc.)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error(`CORS: origin ${origin} not allowed`));
+        }
+    },
+    credentials: true,
+}));
 app.use(express.json());
 
 app.use('/auth', authRouter);
