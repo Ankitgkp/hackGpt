@@ -10,6 +10,8 @@ import { useAuth, authHeaders } from "@/context/AuthContext";
 import { useThrottledCallback } from "@/lib/utils";
 
 const BACKEND_URL = "https://hackgpt-xt15.onrender.com";
+// const BACKEND_URL = "http://localhost:3000";
+
 
 export function ChatContainer() {
   const { user, isLoading } = useAuth();
