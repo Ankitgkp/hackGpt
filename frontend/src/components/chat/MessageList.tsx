@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { Message } from "./types";
 import { MessageBubble } from "./MessageBubble";
 import { TypingIndicator } from "./TypingIndicator";
+import { UnlimitedBadge } from "./UnlimitedBadge";
 
 interface MessageListProps {
   messages: Message[];
@@ -36,7 +37,10 @@ export function MessageList({
 
   if (messages.length === 0) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center text-center px-6">
+      <div className="relative flex flex-1 flex-col items-center justify-center text-center px-6">
+        <div className="absolute top-4 right-5">
+          <UnlimitedBadge />
+        </div>
         <h2 className="text-2xl font-semibold tracking-tight">
           Hello! How can I help you today?
         </h2>
