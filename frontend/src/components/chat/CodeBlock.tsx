@@ -80,7 +80,6 @@ export function CodeBlock({ code, language = "text" }: CodeBlockProps) {
 
   return (
     <div className="code-block-wrapper group relative my-3 rounded-xl overflow-hidden border border-[oklch(0.25_0.015_180)] bg-[oklch(0.16_0.01_180)]">
-
       <div className="flex items-center justify-between px-4 py-2 text-xs bg-[oklch(0.13_0.012_180)] text-[#7a9e96] border-b border-[oklch(0.22_0.012_180)]">
         <span className="font-mono opacity-70">{language}</span>
         <button

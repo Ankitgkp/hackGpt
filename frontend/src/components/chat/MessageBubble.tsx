@@ -44,16 +44,19 @@ function renderMarkdown(content: string): ReactNode[] {
     const textBefore = content.slice(lastIndex, match.index);
     if (textBefore) {
       elements.push(
-        <span key={`text-${lastIndex}`} className="whitespace-pre-wrap break-words">
+        <span
+          key={`text-${lastIndex}`}
+          className="whitespace-pre-wrap break-words"
+        >
           {renderInlineMarkdown(textBefore)}
-        </span>
+        </span>,
       );
     }
 
     const language = match[1] || "text";
     const code = match[2].replace(/\n$/, "");
     elements.push(
-      <CodeBlock key={`code-${match.index}`} code={code} language={language} />
+      <CodeBlock key={`code-${match.index}`} code={code} language={language} />,
     );
 
     lastIndex = match.index + match[0].length;
@@ -62,9 +65,12 @@ function renderMarkdown(content: string): ReactNode[] {
   const remaining = content.slice(lastIndex);
   if (remaining) {
     elements.push(
-      <span key={`text-${lastIndex}`} className="whitespace-pre-wrap break-words">
+      <span
+        key={`text-${lastIndex}`}
+        className="whitespace-pre-wrap break-words"
+      >
         {renderInlineMarkdown(remaining)}
-      </span>
+      </span>,
     );
   }
 
@@ -80,7 +86,9 @@ export function MessageBubble({ message, isStreaming }: MessageBubbleProps) {
   const isUser = message.role === "user";
 
   return (
-    <div className={cn("flex px-4 py-3", isUser ? "justify-end" : "justify-start")}>
+    <div
+      className={cn("flex px-4 py-3", isUser ? "justify-end" : "justify-start")}
+    >
       <div
         className={cn(
           "text-sm leading-relaxed",
