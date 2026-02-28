@@ -18,7 +18,7 @@ import {
 } from "@/lib/auth";
 
 // todos --> add this to config or .env
-const BACKEND_URL = "https://hackgpt-xt15.onrender.com";
+const BACKEND_URL = "https://api.1forge.in";
 // const BACKEND_URL = "http://localhost:3000";
 
 interface AuthContextValue {
