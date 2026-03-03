@@ -18,7 +18,7 @@ function renderInlineMarkdown(text: string): ReactNode[] {
           return (
             <code
               key={j}
-              className="bg-black/10 dark:bg-white/10 rounded px-1 font-mono text-xs"
+              className="rounded-md bg-primary/10 px-1.5 py-0.5 font-mono text-xs text-primary"
             >
               {part.slice(1, -1)}
             </code>
@@ -87,19 +87,22 @@ export function MessageBubble({ message, isStreaming }: MessageBubbleProps) {
 
   return (
     <div
-      className={cn("flex px-4 py-3", isUser ? "justify-end" : "justify-start")}
+      className={cn(
+        "flex px-4 py-3 animate-fade-in-up",
+        isUser ? "justify-end" : "justify-start",
+      )}
     >
       <div
         className={cn(
           "text-sm leading-relaxed",
           isUser
-            ? "max-w-[75%] rounded-3xl bg-muted dark:bg-white/10 text-foreground px-4 py-2.5"
+            ? "max-w-[75%] rounded-3xl bg-primary/10 border border-primary/15 text-foreground px-4 py-2.5"
             : "max-w-[75%]",
         )}
       >
         <div className="wrap-break-word">{renderMarkdown(message.content)}</div>
         {isStreaming && (
-          <span className="ml-1 inline-block h-4 w-0.5 animate-pulse bg-current align-middle" />
+          <span className="ml-1 inline-block h-4 w-0.5 rounded-full bg-primary animate-glow-pulse align-middle" />
         )}
       </div>
     </div>

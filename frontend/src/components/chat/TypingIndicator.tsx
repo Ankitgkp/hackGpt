@@ -2,22 +2,19 @@
 
 export function TypingIndicator() {
   return (
-    <div className="flex items-end gap-3 px-6 py-4">
-      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted border border-border text-xs font-semibold">
-        AI
-      </div>
-      <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-muted px-4 py-3">
+    <div className="flex items-end gap-3 px-6 py-4 animate-fade-in-up">
+      <div className="flex items-center gap-1.5 rounded-2xl bg-muted/60 border border-border/40 px-4 py-3">
         <span
-          className="size-1.5 rounded-full bg-muted-foreground/60 animate-bounce"
+          className="size-1.5 rounded-full bg-primary/70 animate-dot-bounce"
           style={{ animationDelay: "0ms" }}
         />
         <span
-          className="size-1.5 rounded-full bg-muted-foreground/60 animate-bounce"
-          style={{ animationDelay: "150ms" }}
+          className="size-1.5 rounded-full bg-primary/70 animate-dot-bounce"
+          style={{ animationDelay: "160ms" }}
         />
         <span
-          className="size-1.5 rounded-full bg-muted-foreground/60 animate-bounce"
-          style={{ animationDelay: "300ms" }}
+          className="size-1.5 rounded-full bg-primary/70 animate-dot-bounce"
+          style={{ animationDelay: "320ms" }}
         />
       </div>
     </div>

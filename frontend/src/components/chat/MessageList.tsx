@@ -41,9 +41,14 @@ export function MessageList({
         <div className="absolute top-4 right-5">
           <UnlimitedBadge />
         </div>
-        <h2 className="text-2xl font-semibold tracking-tight">
-          Hello! How can I help you today?
-        </h2>
+        <div className="space-y-3 animate-fade-in-up">
+          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground via-foreground/80 to-primary bg-clip-text text-transparent">
+            Hello! How can I help?
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Start typing below to begin a conversation.
+          </p>
+        </div>
       </div>
     );
   }

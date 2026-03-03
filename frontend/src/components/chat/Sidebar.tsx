@@ -83,10 +83,11 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "relative flex h-full shrink-0 flex-col border-r border-border bg-muted/30 dark:bg-sidebar backdrop-blur-xl overflow-hidden transition-all duration-300 ease-in-out",
+        "relative flex h-full shrink-0 flex-col border-r border-border/50 bg-sidebar/80 backdrop-blur-2xl overflow-hidden transition-all duration-300 ease-in-out",
         isOpen ? "w-64" : "w-14",
       )}
     >
+      {/* ─── Collapsed State ─── */}
       <div
         className={cn(
           "absolute inset-0 flex flex-col items-center justify-between py-3 transition-opacity duration-300",
@@ -98,7 +99,7 @@ export function Sidebar({
             variant="ghost"
             size="icon"
             onClick={onToggle}
-            className="size-9"
+            className="size-9 hover:bg-primary/10 hover:text-primary transition-colors"
             title="Open sidebar"
           >
             <PanelLeft size={18} />
@@ -107,7 +108,7 @@ export function Sidebar({
             variant="ghost"
             size="icon"
             onClick={onNewChat}
-            className="size-9"
+            className="size-9 hover:bg-primary/10 hover:text-primary transition-colors"
             title="New chat"
           >
             <PenSquare size={18} />
@@ -139,50 +140,55 @@ export function Sidebar({
         </div>
       </div>
 
+      {/* ─── Expanded State ─── */}
       <div
         className={cn(
           "flex h-full w-64 flex-col transition-opacity duration-300",
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none",
         )}
       >
+        {/* Header */}
         <div className="flex h-14 items-center justify-between px-4 pt-2">
           <div className="flex items-center gap-2">
             <PanelLeftClose
               size={16}
-              className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors"
+              className="cursor-pointer text-muted-foreground hover:text-primary transition-colors"
               onClick={onToggle}
             />
-            <span className="text-sm font-bold tracking-tight whitespace-nowrap">
+            <span className="text-sm font-bold tracking-tight whitespace-nowrap text-primary">
               gg
             </span>
           </div>
         </div>
 
+        {/* New Chat Button */}
         <div className="px-3 pb-2">
           <button
             onClick={onNewChat}
-            className="w-full rounded-xl bg-primary/15 hover:bg-primary/25 border border-primary/20 text-primary transition-all py-2.5 font-semibold text-sm flex items-center justify-center whitespace-nowrap"
+            className="w-full rounded-xl bg-primary/10 hover:bg-primary/20 border border-primary/20 hover:border-primary/40 text-primary transition-all duration-200 py-2.5 font-semibold text-sm flex items-center justify-center whitespace-nowrap hover:shadow-[0_0_20px_rgba(212,160,74,0.1)]"
           >
             New Chat
           </button>
         </div>
 
+        {/* Search */}
         <div className="px-3 pb-2">
           <div className="relative">
             <Search
               size={14}
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/60"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/50"
             />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search your threads..."
-              className="w-full rounded-lg bg-accent/50 border border-border/50 py-1.5 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-ring transition-all"
+              className="w-full rounded-lg bg-muted/50 border border-border/50 py-1.5 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/30 transition-all"
             />
           </div>
         </div>
 
+        {/* Session List */}
         <div className="flex-1 overflow-y-auto px-2 py-1">
           {!user ? (
             <div className="flex flex-col items-center gap-3 px-3 py-8 text-center">
@@ -199,18 +205,19 @@ export function Sidebar({
           ) : (
             groupedSessions.map((group) => (
               <div key={group.label} className="mb-2">
-                <p className="px-3 pt-2 pb-1 text-xs font-medium text-primary/80">
+                <p className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-widest text-primary/60">
                   {group.label}
                 </p>
-                {group.sessions.map((session) => (
+                {group.sessions.map((session, i) => (
                   <div
                     key={session.id}
                     className={cn(
-                      "group flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer transition-colors",
+                      "group flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer transition-all duration-200 animate-slide-in-left",
                       session.id === activeSessionId
-                        ? "bg-accent text-accent-foreground"
-                        : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+                        ? "bg-primary/10 text-foreground border border-primary/15"
+                        : "text-muted-foreground hover:bg-muted/80 hover:text-foreground",
                     )}
+                    style={{ animationDelay: `${i * 30}ms` }}
                     onClick={() => onSelectSession(session.id)}
                   >
                     <span className="flex-1 truncate">{session.title}</span>
@@ -236,11 +243,12 @@ export function Sidebar({
           )}
         </div>
 
-        <div className="border-t border-border/50 p-3">
+        {/* Bottom User Area */}
+        <div className="border-t border-border/30 p-3">
           {user ? (
             <div className="flex items-center justify-between gap-2">
               <div className="flex min-w-0 items-center gap-2">
-                <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold">
                   {user.username[0].toUpperCase()}
                 </div>
                 <div className="min-w-0">
@@ -255,7 +263,7 @@ export function Sidebar({
                   variant="ghost"
                   size="icon"
                   onClick={signOut}
-                  className="size-7 shrink-0"
+                  className="size-7 shrink-0 hover:bg-destructive/10 hover:text-destructive"
                   title="Sign out"
                 >
                   <LogOut size={14} />
@@ -266,7 +274,7 @@ export function Sidebar({
             <div className="flex items-center justify-between gap-2">
               <button
                 onClick={onSignInClick}
-                className="flex flex-1 items-center gap-2 rounded-lg px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground whitespace-nowrap"
+                className="flex flex-1 items-center gap-2 rounded-lg px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground whitespace-nowrap"
               >
                 <LogIn size={16} />
                 <span>Login</span>

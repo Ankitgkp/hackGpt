@@ -5,10 +5,11 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { Check, Copy } from "lucide-react";
 import type { CSSProperties } from "react";
 
-const tealTheme: { [key: string]: CSSProperties } = {
+/* Catppuccin Mocha-inspired warm syntax theme */
+const warmTheme: { [key: string]: CSSProperties } = {
   'code[class*="language-"]': {
-    color: "#c9d8d4",
-    fontFamily: "var(--font-mono), ui-monospace, monospace",
+    color: "#cdd6f4",
+    fontFamily: "var(--font-jetbrains-mono), ui-monospace, monospace",
     fontSize: "0.8125rem",
     lineHeight: "1.7",
     direction: "ltr",
@@ -19,8 +20,8 @@ const tealTheme: { [key: string]: CSSProperties } = {
     tabSize: 2,
   },
   'pre[class*="language-"]': {
-    color: "#c9d8d4",
-    fontFamily: "var(--font-mono), ui-monospace, monospace",
+    color: "#cdd6f4",
+    fontFamily: "var(--font-jetbrains-mono), ui-monospace, monospace",
     fontSize: "0.8125rem",
     lineHeight: "1.7",
     direction: "ltr",
@@ -34,34 +35,34 @@ const tealTheme: { [key: string]: CSSProperties } = {
     overflow: "auto",
     background: "transparent",
   },
-  comment: { color: "#5c7a72", fontStyle: "italic" },
-  prolog: { color: "#5c7a72" },
-  doctype: { color: "#5c7a72" },
-  cdata: { color: "#5c7a72" },
-  punctuation: { color: "#7a9e96" },
-  property: { color: "#6ec5b8" },
-  tag: { color: "#6ec5b8" },
-  boolean: { color: "#ff9e64" },
-  number: { color: "#ff9e64" },
-  constant: { color: "#ff9e64" },
-  symbol: { color: "#6ec5b8" },
-  deleted: { color: "#f47067" },
-  selector: { color: "#7ee6b0" },
-  "attr-name": { color: "#7ee6b0" },
-  string: { color: "#7ee6b0" },
-  char: { color: "#7ee6b0" },
-  builtin: { color: "#7ee6b0" },
-  inserted: { color: "#7ee6b0" },
-  operator: { color: "#7a9e96" },
-  entity: { color: "#6ec5b8", cursor: "help" },
-  url: { color: "#6ec5b8" },
-  "attr-value": { color: "#7ee6b0" },
-  keyword: { color: "#bb9af7" },
-  function: { color: "#6ec5b8" },
-  "class-name": { color: "#6ec5b8" },
-  regex: { color: "#ff9e64" },
-  important: { color: "#ff9e64", fontWeight: "bold" },
-  variable: { color: "#c9d8d4" },
+  comment: { color: "#6c7086", fontStyle: "italic" },
+  prolog: { color: "#6c7086" },
+  doctype: { color: "#6c7086" },
+  cdata: { color: "#6c7086" },
+  punctuation: { color: "#9399b2" },
+  property: { color: "#89dceb" },
+  tag: { color: "#89dceb" },
+  boolean: { color: "#fab387" },
+  number: { color: "#fab387" },
+  constant: { color: "#fab387" },
+  symbol: { color: "#f2cdcd" },
+  deleted: { color: "#f38ba8" },
+  selector: { color: "#a6e3a1" },
+  "attr-name": { color: "#f9e2af" },
+  string: { color: "#a6e3a1" },
+  char: { color: "#a6e3a1" },
+  builtin: { color: "#f5c2e7" },
+  inserted: { color: "#a6e3a1" },
+  operator: { color: "#9399b2" },
+  entity: { color: "#89dceb", cursor: "help" },
+  url: { color: "#89dceb" },
+  "attr-value": { color: "#a6e3a1" },
+  keyword: { color: "#cba6f7" },
+  function: { color: "#89b4fa" },
+  "class-name": { color: "#f9e2af" },
+  regex: { color: "#fab387" },
+  important: { color: "#fab387", fontWeight: "bold" },
+  variable: { color: "#cdd6f4" },
 };
 
 interface CodeBlockProps {
@@ -79,18 +80,19 @@ export function CodeBlock({ code, language = "text" }: CodeBlockProps) {
   };
 
   return (
-    <div className="code-block-wrapper group relative my-3 rounded-xl overflow-hidden border border-[oklch(0.25_0.015_180)] bg-[oklch(0.16_0.01_180)]">
-      <div className="flex items-center justify-between px-4 py-2 text-xs bg-[oklch(0.13_0.012_180)] text-[#7a9e96] border-b border-[oklch(0.22_0.012_180)]">
+    <div className="group relative my-3 rounded-xl overflow-hidden border border-border/60 bg-[#1e1e2e]">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-2 text-xs bg-[#181825] text-[#9399b2] border-b border-white/5">
         <span className="font-mono opacity-70">{language}</span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs text-[#7a9e96] transition-all duration-200 hover:bg-white/10 hover:text-[#6ec5b8]"
+          className="flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs text-[#9399b2] transition-all duration-200 hover:bg-white/5 hover:text-[#f9e2af]"
           aria-label="Copy code"
         >
           {copied ? (
             <>
-              <Check size={14} className="text-[#6ec5b8]" />
-              <span className="text-[#6ec5b8]">Copied!</span>
+              <Check size={14} className="text-[#a6e3a1]" />
+              <span className="text-[#a6e3a1]">Copied!</span>
             </>
           ) : (
             <>
@@ -100,9 +102,10 @@ export function CodeBlock({ code, language = "text" }: CodeBlockProps) {
           )}
         </button>
       </div>
+      {/* Code */}
       <SyntaxHighlighter
         language={language}
-        style={tealTheme}
+        style={warmTheme}
         customStyle={{
           margin: 0,
           borderRadius: 0,
